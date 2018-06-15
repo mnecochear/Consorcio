@@ -3,7 +3,6 @@ App = {
   contracts: {},
 
   init: function() {
-        // TODO funcion inicial
     return App.initWeb3();
   },
 
@@ -28,9 +27,6 @@ App = {
 
       // Set the provider for our contract
       App.contracts.Consorcio.setProvider(App.web3Provider);
-
-      // Use our contract to do something useful
-      // return App.someFunction;
     });
 
     return App.bindEvents();
@@ -38,10 +34,13 @@ App = {
 
   bindEvents: function() {
     $(document).on('click', '#test-btn', App.getMembers);
+    //$(document).on('click', '#execute-btn', App.executeProposals);
     return App.setView();
   },
 
   setView: function() {
+    /* TODO crear vistas en archivo aparte e incluirlo aquí
+    const views = require('./views'); */
     var nameTextbox = document.createElement('input');
     var addMemberBtn = document.createElement('input');
     nameTextbox.id = 'textbox-fn';
@@ -62,14 +61,18 @@ App = {
     App.contracts.Consorcio.deployed().then(function(instance) {
       consorcioInstance = instance;
       // Agregar nuevo socio
-      consorcioInstance.addMember(account, name).call();
+      consorcioInstance.agregarSocio(account, name).call();
     });
+  },
+
+  executeProposals: function() {
+    // TODO ejecutar propuestas
   },
 
   getMembers: function() {
     App.contracts.Consorcio.deployed().then(function(instance) {
       consorcioInstance = instance;
-      return consorcioInstance.getMembers.call();
+      return consorcioInstance.getSocios.call();
     }).then(function(names) {
       for (var i = 0; i < names.length; i++)
         console.log(web3.toAscii(names[i]));
